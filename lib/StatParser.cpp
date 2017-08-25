@@ -100,12 +100,12 @@ bool StatParser::parse_uint16(std::string line, unsigned int *i, uint16_t *val,
 
     if (next_digit == -1) {
       state = parse_error;
-      MAKE_MESSAGE(message,
-                   filename << ":" << line_no << ": while parsing " << what
-                            << ", supposed digit " << line[*i]
-                            << " neither 0, 1, 2, 3, 4, 5, 6, 7, "
-                               "8, or 9. Have we switched from decimal "
-                               "to something else while I wasn't looking?");
+      MAKE_MESSAGE(message, filename
+                                << ":" << line_no << ": while parsing " << what
+                                << ", supposed digit " << line[*i]
+                                << " neither 0, 1, 2, 3, 4, 5, 6, 7, "
+                                   "8, or 9. Have we switched from decimal "
+                                   "to something else while I wasn't looking?");
       return false;
     }
 
@@ -133,12 +133,12 @@ bool StatParser::parse_uint8(std::string line, unsigned int *i, uint8_t *val,
 
     if (next_digit == -1) {
       state = parse_error;
-      MAKE_MESSAGE(message,
-                   filename << ":" << line_no << ": wile parsing " << what
-                            << ", supposed digit " << line[*i]
-                            << " neither 0, 1, 2, 3, 4, 5, 6, "
-                               "7, 8, or 9. Have we switched from decimal "
-                               "to something else while I wasn't looking?");
+      MAKE_MESSAGE(message, filename
+                                << ":" << line_no << ": wile parsing " << what
+                                << ", supposed digit " << line[*i]
+                                << " neither 0, 1, 2, 3, 4, 5, 6, "
+                                   "7, 8, or 9. Have we switched from decimal "
+                                   "to something else while I wasn't looking?");
       return false;
     }
 
@@ -166,8 +166,8 @@ bool StatParser::parse_uint8(std::string line, unsigned int *i, uint8_t *val,
     state = parse_error;
     MAKE_MESSAGE(message, filename << ":" << line_no << ": Expected '" << delim
                                    << "' "
-                                      "after " << what << ", but got '"
-                                   << line[*i] << "'");
+                                      "after "
+                                   << what << ", but got '" << line[*i] << "'");
     return false;
   }
   (*i)++;
@@ -221,8 +221,8 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
         state = parse_error;
         MAKE_MESSAGE(message, filename << ":" << line_no
                                        << ": Expected digits after P "
-                                          "and spaces, but got '" << line[i]
-                                       << "'");
+                                          "and spaces, but got '"
+                                       << line[i] << "'");
         return false;
       }
 
@@ -240,8 +240,8 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
         state = parse_error;
         MAKE_MESSAGE(message, filename << ":" << line_no
                                        << ": Expected spaces after "
-                                          "packet number, but got '" << line[i]
-                                       << "'");
+                                          "packet number, but got '"
+                                       << line[i] << "'");
         return false;
       }
 
@@ -260,8 +260,8 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
         state = parse_error;
         MAKE_MESSAGE(message, filename << ":" << line_no
                                        << ": Expected digits after "
-                                          "packet number, but got '" << line[i]
-                                       << "'");
+                                          "packet number, but got '"
+                                       << line[i] << "'");
         return false;
       }
 
@@ -300,8 +300,8 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
         state = parse_error;
         MAKE_MESSAGE(message, filename << ":" << line_no
                                        << ": Expected spaces after "
-                                          "relative time, but got '" << line[i]
-                                       << "'");
+                                          "relative time, but got '"
+                                       << line[i] << "'");
         return false;
       }
 
@@ -320,8 +320,8 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
         state = parse_error;
         MAKE_MESSAGE(message, filename << ":" << line_no
                                        << ": Expected digits after "
-                                          "relative time, but got '" << line[i]
-                                       << "'");
+                                          "relative time, but got '"
+                                       << line[i] << "'");
         return false;
       }
 
@@ -337,10 +337,10 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
 
       if (!isspace(line[i])) {
         state = parse_error;
-        MAKE_MESSAGE(message,
-                     filename << ":" << line_no
-                              << ": Expected spaces after length, but got '"
-                              << line[i] << "'");
+        MAKE_MESSAGE(message, filename
+                                  << ":" << line_no
+                                  << ": Expected spaces after length, but got '"
+                                  << line[i] << "'");
         return false;
       }
 
@@ -349,18 +349,18 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
 
       if (i >= line.length()) {
         state = parse_error;
-        MAKE_MESSAGE(message,
-                     filename << ":" << line_no
-                              << ": Line ends after length and spaces");
+        MAKE_MESSAGE(message, filename
+                                  << ":" << line_no
+                                  << ": Line ends after length and spaces");
         return false;
       }
 
       if (!isdigit(line[i])) {
         state = parse_error;
-        MAKE_MESSAGE(message,
-                     filename << ":" << line_no
-                              << ": Expected digits after length, but got '"
-                              << line[i] << "'");
+        MAKE_MESSAGE(message, filename
+                                  << ":" << line_no
+                                  << ": Expected digits after length, but got '"
+                                  << line[i] << "'");
         return false;
       }
 
@@ -384,10 +384,10 @@ bool StatParser::next_p(uint16_t *length, uint8_t *source_address,
 
       if (i < line.length()) {
         state = parse_error;
-        MAKE_MESSAGE(
-            message,
-            filename << ":" << line_no
-                     << ": There is non-blank junk at the end of the line");
+        MAKE_MESSAGE(message,
+                     filename
+                         << ":" << line_no
+                         << ": There is non-blank junk at the end of the line");
         return false;
       }
 

@@ -1,15 +1,15 @@
 /* Hi Emacs, please use -*- mode: C; -*- */
 /* Copyright (c) 2011-2014 ETH Zürich. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *    * Redistributions of source code must retain the above copyright
  *      notice, this list of conditions and the following disclaimer.
  *    * Redistributions in binary form must reproduce the above copyright
  *      notice, this list of conditions and the following disclaimer in the
  *      documentation and/or other materials provided with the distribution.
- *    * Neither the names of ETH Zürich nor the names of other contributors 
- *      may be used to endorse or promote products derived from this software 
+ *    * Neither the names of ETH Zürich nor the names of other contributors
+ *      may be used to endorse or promote products derived from this software
  *      without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -171,125 +171,124 @@
  */
 
 #ifndef _LIBFC_LIBFC_H_
-#  define _LIBFC_LIBFC_H_
+#define _LIBFC_LIBFC_H_
 
-#  if defined(__cplusplus)
+#if defined(__cplusplus)
 extern "C" {
-#  endif /* defined(__cplusplus) */
+#endif /* defined(__cplusplus) */
 
 #include <stdlib.h>
 #include <wandio.h>
 
-  /** An libfc template set.
-   *
-   * This is an opaque struct, and you should only ever handle a
-   * pointer to it.
-   */
-  struct libfc_template_group_t;
+/** An libfc template set.
+ *
+ * This is an opaque struct, and you should only ever handle a
+ * pointer to it.
+ */
+struct libfc_template_group_t;
 
-  /** An libfc template.
-   *
-   * This is an opaque struct, and you should only ever handle a
-   * pointer to it.
-   */
-  struct libfc_template_t;
+/** An libfc template.
+ *
+ * This is an opaque struct, and you should only ever handle a
+ * pointer to it.
+ */
+struct libfc_template_t;
 
-  /** Creates a new libfc template group.
-   *
-   * @param version the only legitimate values are 9 (to read NetFlow
-   *   V9) and 10 (to read IPFIX); anything else returns NULL.
-   *
-   * @return a new libfc template group.
-   */
-  extern struct libfc_template_group_t* libfc_template_group_new(int version);
+/** Creates a new libfc template group.
+ *
+ * @param version the only legitimate values are 9 (to read NetFlow
+ *   V9) and 10 (to read IPFIX); anything else returns NULL.
+ *
+ * @return a new libfc template group.
+ */
+extern struct libfc_template_group_t *libfc_template_group_new(int version);
 
-  /** Creates a new libfc template within a template set.
-   *
-   * @param s the template set in which to create the new template
-   * @return a new libfc template.
-   */
-  extern struct libfc_template_t* libfc_template_new(
-    struct libfc_template_group_t* s);
+/** Creates a new libfc template within a template set.
+ *
+ * @param s the template set in which to create the new template
+ * @return a new libfc template.
+ */
+extern struct libfc_template_t *
+libfc_template_new(struct libfc_template_group_t *s);
 
-  /** Destroys an libfc template set.
-   *
-   * This also destroys all templates in the template set.
-   *
-   * @param s libfc template set, previously created by
-   * libfc_template_group_new().
-   */
-  extern void libfc_template_group_delete(struct libfc_template_group_t* s);
+/** Destroys an libfc template set.
+ *
+ * This also destroys all templates in the template set.
+ *
+ * @param s libfc template set, previously created by
+ * libfc_template_group_new().
+ */
+extern void libfc_template_group_delete(struct libfc_template_group_t *s);
 
-  /** Registers IE name/address association for .
-   *
-   * @param t the template in which to register the association
-   * @param ie_name name of libfc information element.  For the
-   *   moment, this name can only come from the standard information
-   *   model, until I figure out a good way to support more
-   *   information models.
-   * @param p the address with which the previously mentioned
-   *   information element is associated.
-   * @param size the size of the information element on the wire, or
-   *   0 for the default size (this can be used, for example, when
-   *   collecting)
-   *
-   * @return non-zero if the operation was successful, 0 if the
-   *     given size is not appropriate for the information element.
-   */
-  extern int libfc_register_placement(struct libfc_template_t* t,
-                                      const char* ie_name, void* p, size_t size);
+/** Registers IE name/address association for .
+ *
+ * @param t the template in which to register the association
+ * @param ie_name name of libfc information element.  For the
+ *   moment, this name can only come from the standard information
+ *   model, until I figure out a good way to support more
+ *   information models.
+ * @param p the address with which the previously mentioned
+ *   information element is associated.
+ * @param size the size of the information element on the wire, or
+ *   0 for the default size (this can be used, for example, when
+ *   collecting)
+ *
+ * @return non-zero if the operation was successful, 0 if the
+ *     given size is not appropriate for the information element.
+ */
+extern int libfc_register_placement(struct libfc_template_t *t,
+                                    const char *ie_name, void *p, size_t size);
 
-  /** Registers callback for when placement is complete.
-   *
-   * This function registers a callback that is called whenever a
-   * record has been read that matches any template in the set.  In that
-   * case, the memory addresses in the template will have been filled
-   * with new values.
-   *
-   * @param s the template set
-   * @param c the callback to call
-   * @param vparg an optional argument to pass to the callback
-   */
-extern void libfc_register_callback(struct libfc_template_t* t,
-                                    int (*c) (const struct libfc_template_t*,
-                                               void *),
+/** Registers callback for when placement is complete.
+ *
+ * This function registers a callback that is called whenever a
+ * record has been read that matches any template in the set.  In that
+ * case, the memory addresses in the template will have been filled
+ * with new values.
+ *
+ * @param s the template set
+ * @param c the callback to call
+ * @param vparg an optional argument to pass to the callback
+ */
+extern void libfc_register_callback(struct libfc_template_t *t,
+                                    int (*c)(const struct libfc_template_t *,
+                                             void *),
                                     void *vparg);
-  /** Collect IPFIX data from a file.
-   *
-   * @param fd a valid file descriptor, such as you'd get back from a
-   *     successful call to open(2)
-   * @param name the name by which you want to have this file known to
-   *     diagnostics
-   * @param s template set containing the templates of interest and the callback
-   *
-   * @return non-zero on success and 0 on error
-   */
-extern int libfc_collect_from_file(int fd, const char* name,
-                                     struct libfc_template_group_t* t);
+/** Collect IPFIX data from a file.
+ *
+ * @param fd a valid file descriptor, such as you'd get back from a
+ *     successful call to open(2)
+ * @param name the name by which you want to have this file known to
+ *     diagnostics
+ * @param s template set containing the templates of interest and the callback
+ *
+ * @return non-zero on success and 0 on error
+ */
+extern int libfc_collect_from_file(int fd, const char *name,
+                                   struct libfc_template_group_t *t);
 
-  /** Collect IPFIX data from a wandio stream.
-   *
-   * @param fd a valid file descriptor, such as you'd get back from a
-   *     successful call to open(2)
-   * @param s template set containing the templates of interest
-   *
-   * @return non-zero on success and 0 on error
-   */
+/** Collect IPFIX data from a wandio stream.
+ *
+ * @param fd a valid file descriptor, such as you'd get back from a
+ *     successful call to open(2)
+ * @param s template set containing the templates of interest
+ *
+ * @return non-zero on success and 0 on error
+ */
 extern int libfc_collect_from_wandio(io_t *wio, const char *name,
-                                     struct libfc_template_group_t* s);
+                                     struct libfc_template_group_t *s);
 
-
-  /** Add IESpecs from a file to the information model
-   *
-   * @param specfilename path to specfile
-   * @return non-zero on success and zero on error
-   */
+/** Add IESpecs from a file to the information model
+ *
+ * @param specfilename path to specfile
+ * @return non-zero on success and zero on error
+ */
 extern int libfc_add_specfile(const char *specfilename);
 
 extern void libfc_initialize_logging(const char *lpfilename);
-    
-#  if defined(__cplusplus)
+
+#if defined(__cplusplus)
 }
-#  endif /* defined(__cplusplus) */
+#endif /* defined(__cplusplus) */
 
 #endif /* _LIBFC_LIBFC_H_ */
